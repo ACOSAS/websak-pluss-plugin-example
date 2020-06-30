@@ -1,0 +1,23 @@
+{
+  "name": "exampleplugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rimraf ./dist/",
+    "prebuild": "copyfiles -e ./src/**/*.ts -f ./src/**/*.* dist",
+    "build": "tsc",
+    "watch": "nodemon --watch src -e ts,html,svg' --exec npm run build"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "copyfiles": "^2.3.0",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "typescript": "^3.9.5"
+  },
+  "dependencies": {
+    "@acos/acos-websak-plugin-api": "^0.2.0"
+  }
+}
