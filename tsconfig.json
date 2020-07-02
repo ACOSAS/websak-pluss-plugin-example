@@ -5,10 +5,14 @@
         "moduleResolution": "Node",
         "lib": [
             "DOM",
-            "ES5"
+            "DOM.Iterable",
+            "ES2015"
         ],
+        "downlevelIteration": true,
         "strict": true,
-        "outDir": "dist"
+        "outDir": "dist",
     },
-    "include": [ "./src/**/*.ts" ]
+    "include": [
+        "./src/**/*.ts"
+    ],
 }

@@ -1,55 +1,38 @@
 import type { Recipient } from '@acos/acos-websak-plugin-api';
 
-const baseUrl = (<HTMLScriptElement>document.currentScript).src;
-const frameUrl = new URL('search.html', baseUrl).href
-const iconUrl = new URL('icon.svg', baseUrl).href;
+const scriptUrl = new URL((<HTMLScriptElement>document.currentScript).src);
+const frameUrl = new URL(<string>scriptUrl.searchParams.get('endpoint')).href;
 
 window.pluginHost.then(pluginHost => {
 	pluginHost.add({
 		type: 'CONTEXTMENU',
 		identifier: 'SEARCH',
-		label: 'Søk i 3. parts tjeneste',
-		icon: iconUrl,
+		label: 'Søk i agresso register',
+		icon: 'wsi-search',
 		onClick: () => {
-			const content = document.createElement('iframe');
-			content.src = frameUrl;
-			content.style.width = '100%';
-			content.style.border = 'none';
-
-
-			const dialogRef = pluginHost.openDialog<Recipient[]>('Søk etter kontakt', content, undefined, {
-				width: '80vw',
-				disableClose: true,
-			});
-
+			const frame = document.createElement('iframe');
+			frame.src = frameUrl;
+			frame.style.width = '100%';
+			frame.style.border = 'none';
+			
 			const onMessage = (event: MessageEvent) => {
-				if (event.source === content.contentWindow) {
+				if (event.source === frame.contentWindow) {
 					if (event.data.submit) {
 						window.removeEventListener('message', onMessage);
-						dialogRef.close([
-							{
-								name: event.data.name,
-								saveContact: false,
-
-								address: event.data.address,
-								attention: event.data.attention,
-								city: event.data.city,
-								countryCode: event.data.countryCode,
-								email: event.data.email,
-								phoneNumber: event.data.phoneNumber,
-								postalCode: event.data.postalCode,
-								publicIdentifier: event.data.publicIdentifier,
-								reference: event.data.reference,
-							}
-						]);
+						dialogRef.close(event.data.recipients);
 					}
 
 					if (event.data.resize) {
-						content.style.height = event.data.height;
+						frame.style.height = event.data.height;
 					}
 				}
 			};
 			window.addEventListener('message', onMessage);
+
+			const dialogRef = pluginHost.openDialog<Recipient[]>('Søk etter kontakt', frame, undefined, {
+				width: '80vw',
+				disableClose: true,
+			});
 
 			return dialogRef.onClosed();
 		}

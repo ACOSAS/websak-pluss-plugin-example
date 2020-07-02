@@ -15,6 +15,7 @@
             grid-template-columns: max-content 1fr max-content;
             column-gap: 1rem;
             row-gap: 0.25rem;
+            align-items: center;
         }
 
         label {
@@ -24,7 +25,7 @@
                 content: ':';
             }
 
-        input {
+        input, select {
             grid-column-start: span 2;
         }
 
@@ -36,8 +37,23 @@
 
 <body>
     <form>
+        <label for="id">Id</label>
+        <input id="id" name="id" value="">
+
+        <label for="type">Kontakttype</label>
+        <select id="type" name="type">
+            <option value="Person">Person</option>
+            <option value="Organization">Virksomhet</option>
+        </select>
+
+        <label for="saveContact">Lagre i adresseregisteret</label>
+        <input type="checkbox" id="saveContact" name="saveContact" value="true">
+
         <label for="name">Navn</label>
         <input id="name" name="name" value="Foo">
+
+        <label for="email">E-post</label>
+        <input id="email" name="email" value="eksempel@acos.no">
         
         <label for="address">Adresse</label>
         <input id="address" name="address" value="Trollhaugmyra 15">
@@ -51,13 +67,10 @@
         <label for="countryCode">Landskode</label>
         <input id="countryCode" name="countryCode" value="">
 
-        <label for="email">E-post</label>
-        <input id="email" name="email" value="eksempel@acos.no">
-
         <label for="phoneNumber">Telefon</label>
         <input id="phoneNumber" name="phoneNumber" value="+47 56 32 20 00">
 
-        <label for="publicIdentifier">Personnummer</label>
+        <label for="publicIdentifier">Offentlignummer</label>
         <input id="publicIdentifier" name="publicIdentifier" value="31033037689">
 
         <label for="attention">Attention</label>
@@ -68,29 +81,15 @@
 
         <button type="submit">Lagre</button>
     </form>
+    <script src="websakapi.js"></script>
     <script>
         document.querySelector('form').addEventListener('submit', evt => {
             evt.preventDefault();
 
-            const data = new FormData(evt.target);
-            const obj = {
-                submit: true
-            };
-            for (const [key, value] of data) {
-                obj[key] = value;
-            }
-            window.parent.postMessage(obj, '*');
+            const data = new FormData(evt.target)
+            const recipient = Object.fromEntries(data);
+            submitRecipients(recipient);
         });
-
-        function DOMContentLoaded() {
-            window.removeEventListener('DOMContentLoaded', DOMContentLoaded);
-            window.parent.postMessage({
-                resize: true,
-                height: getComputedStyle(document.documentElement).height,
-            }, '*');
-        }
-
-        window.addEventListener('DOMContentLoaded', DOMContentLoaded);
     </script>
 </body>
 
