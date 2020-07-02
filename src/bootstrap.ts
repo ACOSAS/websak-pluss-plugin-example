@@ -1,13 +1,13 @@
 import type { Recipient } from '@acos/acos-websak-plugin-api';
 
 const scriptUrl = new URL((<HTMLScriptElement>document.currentScript).src);
-const frameUrl = new URL(<string>scriptUrl.searchParams.get('endpoint')).href;
+const frameUrl = new URL(scriptUrl.searchParams.get('endpoint') || 'search.html', scriptUrl).href;
 
 window.pluginHost.then(pluginHost => {
 	pluginHost.add({
 		type: 'CONTEXTMENU',
 		identifier: 'SEARCH',
-		label: 'Søk i agresso register',
+		label: 'Søk i 3. parts tjeneste',
 		icon: 'wsi-search',
 		onClick: () => {
 			const frame = document.createElement('iframe');
